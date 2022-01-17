@@ -5,10 +5,10 @@ from . import models
 @admin.register(models.Message)
 class MessageAdmin(admin.ModelAdmin):
 
-    pass
+    list_display = ("__str__", "conversation")
 
 
 @admin.register(models.Conversation)
 class Conversation(admin.ModelAdmin):
 
-    pass
+    list_display = ("__str__", "count_messages", "count_participants")
