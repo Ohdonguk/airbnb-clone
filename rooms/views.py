@@ -104,5 +104,5 @@ class SearchView(View):
         return render(
             request,
             "rooms/search.html",
-            {"form": form, "rooms": rooms},
+            {"form": form},
         )
