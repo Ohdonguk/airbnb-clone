@@ -62,6 +62,10 @@ def complete_verification(request, key):
     return redirect(reverse("core:home"))
 
 
+class GitgubException(Exception):
+    pass
+
+
 def github_login(request):
     client_id = os.environ.get("GH_ID")
     redirect_uri = "http://127.0.0.1:8000/users/login/github/callback"
@@ -71,44 +75,40 @@ def github_login(request):
 
 
 def github_callback(request):
-    client_id = os.environ.get("GH_ID")
-    client_secret = os.environ.get("GH_SECRET")
-    code = request.GET.get("code", None)
-    if code is not None:
-        result = requests.post(
-            f"https://github.com/login/oauth/access_token?client_id={client_id}&client_secret={client_secret}&code={code}",
-            headers={"Accept": "application/json"},
-        )
-        result_jon = result.json()
-        error = result_jon.get("error", None)
-        if error is not None:
-            return redirect(reverse("users:login"))
-        else:
-            access_token = result_jon.get("access_token")
-            profile_request = requests.get(
-                "https://api.github.com/user",
-                headers={
-                    "Authorization": f"token {access_token}",
-                    "Accept": "application/json",
-                },
-            )
-            profile_json = profile_request.json()
-            username = profile_json.get("login", None)
-            if username is not None:
-                name = profile_json.get("name")
-                email = profile_json.get("email")
-                bio = profile_json.get("bio")
-                models.User.objects.get(email=email)
-                if user is not None:
-                    return redirect(reverse("users:login"))
-                else:
-                    user = models.User.objects.create(
-                        username=email, first_name=name, bio=bio, email=email
-                    )
-                    login(request, user)
-                    return redirect(reverse("core:home"))
-            else:
-                return redirect(reverse("users:login"))
 
-    else:
+    try:
+        client_id = os.environ.get("GH_ID")
+        client_secret = os.environ.get("GH_SECRET")
+        code = request.GET.get("code", None)
+        if code is not None:
+            result = requests.post(
+                f"https://github.com/login/oauth/access_token?client_id={client_id}&client_secret={client_secret}&code={code}",
+                headers={"Accept": "application/json"},
+            )
+            result_jon = result.json()
+            error = result_jon.get("error", None)
+            if error is not None:
+                raise GitgubException()
+            else:
+                access_token = result_jon.get("access_token")
+                profile_request = requests.get(
+                    "https://api.github.com/user",
+                    headers={
+                        "Authorization": f"token {access_token}",
+                        "Accept": "application/json",
+                    },
+                )
+                profile_json = profile_request.json()
+                username = profile_json.get("login", None)
+                if username is not None:
+                    name = profile_json.get("name")
+                    email = profile_json.get("email")
+                    bio = profile_json.get("bio")
+                    user = models.User.objects.get(email=email)
+                else:
+                    raise GitgubException()
+
+        else:
+            raise GitgubException()
+    except GitgubException:
         return redirect(reverse("core:home"))
