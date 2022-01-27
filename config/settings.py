@@ -142,6 +142,7 @@ MEDIA_URL = "/uploads/"
 
 EMAIL_HOST = "smtp.mailgun.org"
 EMAIL_PORT = "587"
+print(os.environ.get("MAILGUN_USERNAME"))
 EMAIL_HOST_USER = os.environ.get("MAILGUN_USERNAME")
 EMAIL_HOST_PASSWORD = os.environ.get("MAILGUN_PASSWORD")
 EMAIL_FROM = "sexy-guy@sandbox5fc0e6b1ff0942d397cf0060bb5af850.mailgun.org"
