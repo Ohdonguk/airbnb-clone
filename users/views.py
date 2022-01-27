@@ -81,16 +81,16 @@ def github_callback(request):
         client_secret = os.environ.get("GH_SECRET")
         code = request.GET.get("code", None)
         if code is not None:
-            result = requests.post(
+            token_result = requests.post(
                 f"https://github.com/login/oauth/access_token?client_id={client_id}&client_secret={client_secret}&code={code}",
                 headers={"Accept": "application/json"},
             )
-            result_jon = result.json()
-            error = result_jon.get("error", None)
+            token_jon = token_result.json()
+            error = token_jon.get("error", None)
             if error is not None:
                 raise GitgubException()
             else:
-                access_token = result_jon.get("access_token")
+                access_token = token_jon.get("access_token")
                 profile_request = requests.get(
                     "https://api.github.com/user",
                     headers={
@@ -104,11 +104,28 @@ def github_callback(request):
                     name = profile_json.get("name")
                     email = profile_json.get("email")
                     bio = profile_json.get("bio")
-                    user = models.User.objects.get(email=email)
+                    try:
+                        user = models.User.objects.get(email=email)
+                        if user.login_method != models.User.LOGIN_GITHUB:
+                            raise GitgubException()
+                    except models.User.DoesNotExist:
+                        user = models.User.objects.create(
+                            email=email,
+                            first_name=name,
+                            username=email,
+                            bio=bio,
+                            login_method=models.User.LOGIN_GITHUB,
+                        )
+                        user.set_unusable_paswosrd()
+                        user.save()
+                    login(request, user)
+                    return redirect(reverse("core:home"))
+
                 else:
                     raise GitgubException()
 
         else:
             raise GitgubException()
     except GitgubException:
+        # send error message
         return redirect(reverse("core:home"))
