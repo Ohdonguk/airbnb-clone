@@ -12,7 +12,7 @@ from . import forms, models
 class LoginView(FormView):
 
     template_name = "users/login.html"
-    form_class = forms.LoginForm
+    form_class = forms.SignUpForm
     success_url = reverse_lazy("core:home")
 
     def form_valid(self, form):
