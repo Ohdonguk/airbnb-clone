@@ -8,12 +8,20 @@
 
 {% block content %}
     
-    {% include 'partials/social_login.html' %}
+<div class="container lg:w-5/12 md:w-1/2 xl:w-1/4 mx-auto flex flex-col items-center border p-6 border-gray-400">
 
-    <form method="POST" action="{% url "users:signup" %}">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button>Sign up</button>
-    </form>
+        {% include 'partials/social_login.html' %}
+
+        <form method="POST" action="{% url "users:signup" %}">
+            {% csrf_token %}
+            {{form.first_name}}
+            {{form.last_name}}
+            <input type="email" placeholder="Email" class="input">
+            <input type="Password" placeholder="Password" class="input">
+            <input type="Password" placeholder="Confirm Password" class="input">
+            <input type="email" placeholder="Email" class="input">
+            <button class="btn">Sign up</button>
+        </form>
+    </div>
     
 {% endblock content %}
