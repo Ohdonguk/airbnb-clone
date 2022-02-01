@@ -16,12 +16,15 @@
             {% csrf_token %}
             {{form.first_name}}
             {{form.last_name}}
-            <input type="email" placeholder="Email" class="input">
-            <input type="Password" placeholder="Password" class="input">
-            <input type="Password" placeholder="Confirm Password" class="input">
-            <input type="email" placeholder="Email" class="input">
+            {{form.email}}
+            {{form.password}}
+            {{form.password1}}
             <button class="btn">Sign up</button>
         </form>
+        <div class="mt-5">
+            <span class="mr-2">Have an account?</span>
+            <a href="{% url 'users:login' %}" class="text-teal-500 font-medium">Log In</a>
+        </div>
     </div>
     
 {% endblock content %}
