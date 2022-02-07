@@ -11,7 +11,6 @@
         {% include 'mixins/auth/auth_form.html' with form=form cta="Update Profile" %}
 
 
-        {{object.login_method}}
         {% if object.login_method == "password" %}
             <div class="mt-5 text-center">
                 <a href="{% url 'users:password' %}" class="text-teal-500 font-medium">Change Password</a>
