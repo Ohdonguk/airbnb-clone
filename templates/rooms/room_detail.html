@@ -8,13 +8,13 @@
 <div>
     <h1>{{room.name}}</h1>
     <h3>{{room.description}}</h3>
-    {{room.country}}
 </div>
 <div>
-    <h2>By:{{room.host.username}}</h2>
+    <h2>By: <a href="{{room.host.get_absolute_url}}">{{room.host.username}}</a>
     {% if room.host.superhost %}
         (superhost)
     {% endif %}
+    </h2>
     <h2>Amenities</h2>
     <ul>
         {% for a in room.amenities.all %}
