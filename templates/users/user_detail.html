@@ -16,7 +16,7 @@
                 {% endif %}
         </div>
 
-        <span class="text-lg">{{user.bio}}</span>
+        <span class="text-lg">{{user.obj.bio}}</span>
         {% if user == user_obj %}
             <a href="{% url 'users:update' %}" class="btn_link">Edit Profile</a>
         {% endif %}
