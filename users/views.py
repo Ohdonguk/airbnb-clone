@@ -1,4 +1,5 @@
 import os
+from django.http import Http404
 import requests
 from django.views.generic import FormView, DetailView, UpdateView
 from django.contrib.auth.views import PasswordChangeView
@@ -259,3 +260,9 @@ class UpdatePasswordView(
 
     def get_success_url(self):
         return self.request.user.get_absolute_url()
+
+    def get_object(self, queryset=None):
+        photo = super().get_object(queryset=queryset)
+        if photo.room.host.pk != self.request.user.pk:
+            raise Http404()
+        return photo
