@@ -3,7 +3,7 @@ import calendar
 
 class Calendar(calendar.Calendar):
     def __init__(self, year, month):
-        super().__init__(firstweekday=2)
+        super().__init__(firstweekday=6)
         self.year = year
         self.month = month
         self.day_names = (
@@ -31,7 +31,7 @@ class Calendar(calendar.Calendar):
         )
 
     def get_days(self):
-        weeks = self.monthdays2calendar(self.year, self.months)
+        weeks = self.monthdays2calendar(self.year, self.month)
         days = []
         for week in weeks:
             for day, _ in week:

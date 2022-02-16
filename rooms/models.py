@@ -3,6 +3,8 @@ from django_countries.fields import CountryField
 from django.urls import reverse
 from core import models as core_models
 from cal import Calendar
+import datetime
+from dateutil import relativedelta
 
 
 class AbstractItem(core_models.TimeStampedModel):
@@ -115,6 +117,6 @@ class Room(core_models.TimeStampedModel):
         return photos
 
     def get_calendars(self):
-        this_month = Calendar(2022, 1)
-        next_month = Calendar(2022, 2)
+        this_month = Calendar(2022, 2)
+        next_month = Calendar(2022, 3)
         return [this_month, next_month]
